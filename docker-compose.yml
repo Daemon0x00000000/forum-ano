@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # API TAH LES FOUS
+  api:
+    build:
+      context: ./services/api
+      dockerfile: Dockerfile
+    container_name: grosse-api
+    restart: always
+    depends_on:
+      - db
+    networks:
+      - backend
+    environment:
+      - DATABASE_URL=mongodb://db:27017/local
+    volumes:
+      - api-data:/app/data
+
+  # LA BDD TYPE NAN NAN
+  db:
+    image: mongo:latest
+    container_name: grosse-bdd
+    restart: always
+    networks:
+      - backend
+    volumes:
+      - db-data:/data/db
+
+  # Le thread pour afficher les messages wallah
+  thread:
+    build:
+      context: ./thread
+      dockerfile: Dockerfile
+    container_name: forum-thread
+    restart: always
+    ports:
+      - "81:80"
+    depends_on:
+      - api
+    networks:
+      - backend
+      - frontend
+
+  # Sender
+  sender:
+    build:
+      context: ./sender
+      dockerfile: Dockerfile
+    container_name: forum-sender
+    restart: always
+    ports:
+      - "8090:8080"
+    depends_on:
+      - api
+    networks:
+      - backend
+      - frontend
+
+networks:
+  backend:
+    internal: true
+  frontend:
+    driver: bridge
+
+volumes:
+  db-data:
+  api-data:
