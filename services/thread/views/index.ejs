@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forum Anonyme - Discussions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #3b82f6;
+      --primary-dark: #2563eb;
+      --secondary-color: #6366f1;
+      --text-color: #334155;
+      --light-text: #64748b;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
+      --error-color: #ef4444;
+      --success-color: #10b981;
+      --radius: 8px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    header {
+      padding: 2rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .btn-new-message {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius);
+      font-weight: 500;
+      font-size: 1rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background-color 0.2s;
+    }
+
+    .btn-new-message:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .title-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--text-color);
+    }
+
+    .refresh-indicator {
+      font-size: 0.875rem;
+      color: var(--light-text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .error-message {
+      background-color: rgba(239, 68, 68, 0.1);
+      border-left: 4px solid var(--error-color);
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border-radius: var(--radius);
+      color: var(--error-color);
+    }
+
+    .message-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .message-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+      transition: transform 0.2s;
+    }
+
+    .message-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .message-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .username {
+      font-weight: 600;
+      color: var(--secondary-color);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .username::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background-color: var(--secondary-color);
+      border-radius: 50%;
+    }
+
+    .date {
+      color: var(--light-text);
+      font-size: 0.875rem;
+    }
+
+    .message-content {
+      color: var(--text-color);
+      line-height: 1.6;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      white-space: pre-line;
+    }
+
+    .no-messages {
+      text-align: center;
+      padding: 3rem 0;
+      color: var(--light-text);
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius);
+    }
+
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--light-text);
+      font-size: 0.875rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    @media (max-width: 640px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .btn-new-message {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .message-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Forum Anonyme</h1>
+    <a href="http://localhost:8090" class="btn-new-message">
+      ✏️ Écrire un nouveau message
+    </a>
+  </header>
+
+  <main>
+    <section>
+      <div class="title-section">
+        <h2>Discussions récentes</h2>
+        <div class="refresh-indicator">
+          Rafraîchissement auto dans <span id="countdown">30</span>s
+        </div>
+      </div>
+
+      <% if (locals.error) { %>
+        <div class="error-message">
+          ⚠️ <%= error %>
+        </div>
+      <% } %>
+
+      <% if (messages && messages.length > 0) { %>
+        <div class="message-list">
+          <% messages.forEach(message => { %>
+            <div class="message-card">
+              <div class="message-header">
+                <span class="username"><%= message.username %></span>
+                <span class="date"><%= new Date(message.createdAt).toLocaleString('fr-FR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  }) %></span>
+              </div>
+              <div class="message-content">
+                <%= message.content %>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <p class="no-messages">Aucun message à afficher pour le moment. Soyez le premier à écrire !</p>
+      <% } %>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Forum Anonyme | Tous droits réservés</p>
+  </footer>
+</div>
+
+<script>
+  // Compte à rebours pour le rafraîchissement
+  const countdownElement = document.getElementById('countdown');
+  let secondsLeft = 30;
+
+  const countdown = setInterval(() => {
+    secondsLeft--;
+    countdownElement.textContent = secondsLeft;
+
+    if (secondsLeft <= 0) {
+      clearInterval(countdown);
+      window.location.reload();
+    }
+  }, 1000);
+</script>
+</body>
+</html>
